@@ -4,11 +4,12 @@ import { GeistMono } from 'geist/font/mono'
 import { ThemeProvider } from '@/components/layout/ThemeProvider'
 import { Toaster } from '@/components/ui/toaster'
 import { getSiteSettings } from '@/lib/payload'
+import { Analytics } from '@vercel/analytics/react'
 import './globals.css'
 
 export async function generateMetadata(): Promise<Metadata> {
   try {
-    const settings = await getSiteSettings() as any
+    const settings = (await getSiteSettings()) as any
     return {
       title: {
         default: settings?.seo?.metaTitle || `${settings?.name} — Portfolio`,
@@ -34,6 +35,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       <body className={`${GeistSans.variable} ${GeistMono.variable} font-sans antialiased`}>
         <ThemeProvider attribute="class" defaultTheme="dark" enableSystem>
           {children}
+          <Analytics />
           <Toaster />
         </ThemeProvider>
       </body>
