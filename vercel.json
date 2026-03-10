@@ -1,0 +1,14 @@
+{
+  "buildCommand": "next build",
+  "devCommand": "next dev",
+  "installCommand": "npm install",
+  "framework": "nextjs",
+  "regions": ["iad1"],
+  "env": {
+    "MONGODB_URI": "@mongodb_uri",
+    "PAYLOAD_SECRET": "@payload_secret",
+    "NEXTAUTH_SECRET": "@nextauth_secret",
+    "NEXTAUTH_URL": "@nextauth_url",
+    "NEXT_PUBLIC_SITE_URL": "@site_url"
+  }
+}

@@ -1,19 +1,14 @@
-import React from 'react'
-import './styles.css'
+import { Navbar } from '@/components/layout/Navbar'
+import { Footer } from '@/components/layout/Footer'
+import { getSiteSettings } from '@/lib/payload'
 
-export const metadata = {
-  description: 'A blank template using Payload in a Next.js app.',
-  title: 'Payload Blank Template',
-}
-
-export default async function RootLayout(props: { children: React.ReactNode }) {
-  const { children } = props
-
+export default async function FrontendLayout({ children }: { children: React.ReactNode }) {
+  const settings = await getSiteSettings().catch(() => null) as any
   return (
-    <html lang="en">
-      <body>
-        <main>{children}</main>
-      </body>
-    </html>
+    <>
+      <Navbar settings={settings} />
+      <main className="min-h-screen">{children}</main>
+      <Footer settings={settings} />
+    </>
   )
 }

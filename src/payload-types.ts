@@ -68,6 +68,11 @@ export interface Config {
   blocks: {};
   collections: {
     users: User;
+    projects: Project;
+    'blog-posts': BlogPost;
+    testimonials: Testimonial;
+    'work-experience': WorkExperience;
+    skills: Skill;
     media: Media;
     'payload-kv': PayloadKv;
     'payload-locked-documents': PayloadLockedDocument;
@@ -77,6 +82,11 @@ export interface Config {
   collectionsJoins: {};
   collectionsSelect: {
     users: UsersSelect<false> | UsersSelect<true>;
+    projects: ProjectsSelect<false> | ProjectsSelect<true>;
+    'blog-posts': BlogPostsSelect<false> | BlogPostsSelect<true>;
+    testimonials: TestimonialsSelect<false> | TestimonialsSelect<true>;
+    'work-experience': WorkExperienceSelect<false> | WorkExperienceSelect<true>;
+    skills: SkillsSelect<false> | SkillsSelect<true>;
     media: MediaSelect<false> | MediaSelect<true>;
     'payload-kv': PayloadKvSelect<false> | PayloadKvSelect<true>;
     'payload-locked-documents': PayloadLockedDocumentsSelect<false> | PayloadLockedDocumentsSelect<true>;
@@ -87,9 +97,18 @@ export interface Config {
     defaultIDType: string;
   };
   fallbackLocale: null;
-  globals: {};
-  globalsSelect: {};
+  globals: {
+    'site-settings': SiteSetting;
+    'hero-section': HeroSection;
+  };
+  globalsSelect: {
+    'site-settings': SiteSettingsSelect<false> | SiteSettingsSelect<true>;
+    'hero-section': HeroSectionSelect<false> | HeroSectionSelect<true>;
+  };
   locale: null;
+  widgets: {
+    collections: CollectionsWidget;
+  };
   user: User;
   jobs: {
     tasks: unknown;
@@ -120,6 +139,8 @@ export interface UserAuthOperations {
  */
 export interface User {
   id: string;
+  name: string;
+  role?: ('admin' | 'editor') | null;
   updatedAt: string;
   createdAt: string;
   email: string;
@@ -141,11 +162,69 @@ export interface User {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "projects".
+ */
+export interface Project {
+  id: string;
+  title: string;
+  slug: string;
+  tagline: string;
+  description: {
+    root: {
+      type: string;
+      children: {
+        type: any;
+        version: number;
+        [k: string]: unknown;
+      }[];
+      direction: ('ltr' | 'rtl') | null;
+      format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+      indent: number;
+      version: number;
+    };
+    [k: string]: unknown;
+  };
+  coverImage: string | Media;
+  images?:
+    | {
+        image: string | Media;
+        id?: string | null;
+      }[]
+    | null;
+  techStack?:
+    | {
+        name: string;
+        /**
+         * Lucide icon name or emoji
+         */
+        icon?: string | null;
+        id?: string | null;
+      }[]
+    | null;
+  /**
+   * Live demo URL
+   */
+  liveUrl?: string | null;
+  /**
+   * GitHub repository URL
+   */
+  githubUrl?: string | null;
+  featured?: boolean | null;
+  status?: ('draft' | 'published' | 'archived') | null;
+  category?: ('web' | 'mobile' | 'backend' | 'fullstack' | 'design' | 'other') | null;
+  completedAt?: string | null;
+  updatedAt: string;
+  createdAt: string;
+  _status?: ('draft' | 'published') | null;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "media".
  */
 export interface Media {
   id: string;
   alt: string;
+  caption?: string | null;
   updatedAt: string;
   createdAt: string;
   url?: string | null;
@@ -157,6 +236,162 @@ export interface Media {
   height?: number | null;
   focalX?: number | null;
   focalY?: number | null;
+  sizes?: {
+    thumbnail?: {
+      url?: string | null;
+      width?: number | null;
+      height?: number | null;
+      mimeType?: string | null;
+      filesize?: number | null;
+      filename?: string | null;
+    };
+    card?: {
+      url?: string | null;
+      width?: number | null;
+      height?: number | null;
+      mimeType?: string | null;
+      filesize?: number | null;
+      filename?: string | null;
+    };
+    hero?: {
+      url?: string | null;
+      width?: number | null;
+      height?: number | null;
+      mimeType?: string | null;
+      filesize?: number | null;
+      filename?: string | null;
+    };
+  };
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "blog-posts".
+ */
+export interface BlogPost {
+  id: string;
+  title: string;
+  slug: string;
+  excerpt: string;
+  content: {
+    root: {
+      type: string;
+      children: {
+        type: any;
+        version: number;
+        [k: string]: unknown;
+      }[];
+      direction: ('ltr' | 'rtl') | null;
+      format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+      indent: number;
+      version: number;
+    };
+    [k: string]: unknown;
+  };
+  coverImage?: (string | null) | Media;
+  tags?:
+    | {
+        tag: string;
+        id?: string | null;
+      }[]
+    | null;
+  /**
+   * Estimated reading time in minutes
+   */
+  readingTime?: number | null;
+  status?: ('draft' | 'published') | null;
+  publishedAt?: string | null;
+  seo?: {
+    metaTitle?: string | null;
+    metaDescription?: string | null;
+  };
+  updatedAt: string;
+  createdAt: string;
+  _status?: ('draft' | 'published') | null;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "testimonials".
+ */
+export interface Testimonial {
+  id: string;
+  name: string;
+  role: string;
+  company: string;
+  avatar?: (string | null) | Media;
+  content: string;
+  rating?: number | null;
+  featured?: boolean | null;
+  linkedIn?: string | null;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "work-experience".
+ */
+export interface WorkExperience {
+  id: string;
+  /**
+   * Job title e.g. Senior Frontend Developer
+   */
+  title: string;
+  company: string;
+  companyUrl?: string | null;
+  companyLogo?: (string | null) | Media;
+  location?: string | null;
+  employmentType?: ('full-time' | 'part-time' | 'contract' | 'freelance' | 'internship') | null;
+  description?: {
+    root: {
+      type: string;
+      children: {
+        type: any;
+        version: number;
+        [k: string]: unknown;
+      }[];
+      direction: ('ltr' | 'rtl') | null;
+      format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+      indent: number;
+      version: number;
+    };
+    [k: string]: unknown;
+  } | null;
+  highlights?:
+    | {
+        point: string;
+        id?: string | null;
+      }[]
+    | null;
+  technologies?:
+    | {
+        name: string;
+        id?: string | null;
+      }[]
+    | null;
+  startDate: string;
+  endDate?: string | null;
+  current?: boolean | null;
+  order?: number | null;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "skills".
+ */
+export interface Skill {
+  id: string;
+  name: string;
+  /**
+   * Devicon class or emoji e.g. devicon-react-original
+   */
+  icon?: string | null;
+  category: 'frontend' | 'backend' | 'database' | 'devops' | 'mobile' | 'design' | 'other';
+  proficiency?: ('beginner' | 'intermediate' | 'advanced' | 'expert') | null;
+  yearsOfExperience?: number | null;
+  featured?: boolean | null;
+  order?: number | null;
+  updatedAt: string;
+  createdAt: string;
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
@@ -185,6 +420,26 @@ export interface PayloadLockedDocument {
     | ({
         relationTo: 'users';
         value: string | User;
+      } | null)
+    | ({
+        relationTo: 'projects';
+        value: string | Project;
+      } | null)
+    | ({
+        relationTo: 'blog-posts';
+        value: string | BlogPost;
+      } | null)
+    | ({
+        relationTo: 'testimonials';
+        value: string | Testimonial;
+      } | null)
+    | ({
+        relationTo: 'work-experience';
+        value: string | WorkExperience;
+      } | null)
+    | ({
+        relationTo: 'skills';
+        value: string | Skill;
       } | null)
     | ({
         relationTo: 'media';
@@ -237,6 +492,8 @@ export interface PayloadMigration {
  * via the `definition` "users_select".
  */
 export interface UsersSelect<T extends boolean = true> {
+  name?: T;
+  role?: T;
   updatedAt?: T;
   createdAt?: T;
   email?: T;
@@ -256,10 +513,135 @@ export interface UsersSelect<T extends boolean = true> {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "projects_select".
+ */
+export interface ProjectsSelect<T extends boolean = true> {
+  title?: T;
+  slug?: T;
+  tagline?: T;
+  description?: T;
+  coverImage?: T;
+  images?:
+    | T
+    | {
+        image?: T;
+        id?: T;
+      };
+  techStack?:
+    | T
+    | {
+        name?: T;
+        icon?: T;
+        id?: T;
+      };
+  liveUrl?: T;
+  githubUrl?: T;
+  featured?: T;
+  status?: T;
+  category?: T;
+  completedAt?: T;
+  updatedAt?: T;
+  createdAt?: T;
+  _status?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "blog-posts_select".
+ */
+export interface BlogPostsSelect<T extends boolean = true> {
+  title?: T;
+  slug?: T;
+  excerpt?: T;
+  content?: T;
+  coverImage?: T;
+  tags?:
+    | T
+    | {
+        tag?: T;
+        id?: T;
+      };
+  readingTime?: T;
+  status?: T;
+  publishedAt?: T;
+  seo?:
+    | T
+    | {
+        metaTitle?: T;
+        metaDescription?: T;
+      };
+  updatedAt?: T;
+  createdAt?: T;
+  _status?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "testimonials_select".
+ */
+export interface TestimonialsSelect<T extends boolean = true> {
+  name?: T;
+  role?: T;
+  company?: T;
+  avatar?: T;
+  content?: T;
+  rating?: T;
+  featured?: T;
+  linkedIn?: T;
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "work-experience_select".
+ */
+export interface WorkExperienceSelect<T extends boolean = true> {
+  title?: T;
+  company?: T;
+  companyUrl?: T;
+  companyLogo?: T;
+  location?: T;
+  employmentType?: T;
+  description?: T;
+  highlights?:
+    | T
+    | {
+        point?: T;
+        id?: T;
+      };
+  technologies?:
+    | T
+    | {
+        name?: T;
+        id?: T;
+      };
+  startDate?: T;
+  endDate?: T;
+  current?: T;
+  order?: T;
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "skills_select".
+ */
+export interface SkillsSelect<T extends boolean = true> {
+  name?: T;
+  icon?: T;
+  category?: T;
+  proficiency?: T;
+  yearsOfExperience?: T;
+  featured?: T;
+  order?: T;
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "media_select".
  */
 export interface MediaSelect<T extends boolean = true> {
   alt?: T;
+  caption?: T;
   updatedAt?: T;
   createdAt?: T;
   url?: T;
@@ -271,6 +653,40 @@ export interface MediaSelect<T extends boolean = true> {
   height?: T;
   focalX?: T;
   focalY?: T;
+  sizes?:
+    | T
+    | {
+        thumbnail?:
+          | T
+          | {
+              url?: T;
+              width?: T;
+              height?: T;
+              mimeType?: T;
+              filesize?: T;
+              filename?: T;
+            };
+        card?:
+          | T
+          | {
+              url?: T;
+              width?: T;
+              height?: T;
+              mimeType?: T;
+              filesize?: T;
+              filename?: T;
+            };
+        hero?:
+          | T
+          | {
+              url?: T;
+              width?: T;
+              height?: T;
+              mimeType?: T;
+              filesize?: T;
+              filename?: T;
+            };
+      };
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
@@ -311,6 +727,157 @@ export interface PayloadMigrationsSelect<T extends boolean = true> {
   batch?: T;
   updatedAt?: T;
   createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "site-settings".
+ */
+export interface SiteSetting {
+  id: string;
+  /**
+   * Your full name
+   */
+  name: string;
+  /**
+   * e.g. Full Stack Developer
+   */
+  title: string;
+  email: string;
+  bio: string;
+  avatar?: (string | null) | Media;
+  /**
+   * Link to your resume PDF
+   */
+  resume?: string | null;
+  /**
+   * e.g. Karachi, Pakistan
+   */
+  location?: string | null;
+  availability?: ('available' | 'busy' | 'not-available') | null;
+  social?: {
+    github?: string | null;
+    linkedin?: string | null;
+    twitter?: string | null;
+    instagram?: string | null;
+    youtube?: string | null;
+    website?: string | null;
+  };
+  seo?: {
+    metaTitle?: string | null;
+    metaDescription?: string | null;
+    ogImage?: (string | null) | Media;
+  };
+  updatedAt?: string | null;
+  createdAt?: string | null;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "hero-section".
+ */
+export interface HeroSection {
+  id: string;
+  greeting?: string | null;
+  /**
+   * Main headline — your name
+   */
+  headline: string;
+  /**
+   * e.g. I build things for the web
+   */
+  subheadline: string;
+  /**
+   * Rotating roles shown in hero — e.g. Full Stack Developer, Open Source Enthusiast
+   */
+  roles?:
+    | {
+        role: string;
+        id?: string | null;
+      }[]
+    | null;
+  ctaPrimary?: {
+    label?: string | null;
+    href?: string | null;
+  };
+  ctaSecondary?: {
+    label?: string | null;
+    href?: string | null;
+  };
+  updatedAt?: string | null;
+  createdAt?: string | null;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "site-settings_select".
+ */
+export interface SiteSettingsSelect<T extends boolean = true> {
+  name?: T;
+  title?: T;
+  email?: T;
+  bio?: T;
+  avatar?: T;
+  resume?: T;
+  location?: T;
+  availability?: T;
+  social?:
+    | T
+    | {
+        github?: T;
+        linkedin?: T;
+        twitter?: T;
+        instagram?: T;
+        youtube?: T;
+        website?: T;
+      };
+  seo?:
+    | T
+    | {
+        metaTitle?: T;
+        metaDescription?: T;
+        ogImage?: T;
+      };
+  updatedAt?: T;
+  createdAt?: T;
+  globalType?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "hero-section_select".
+ */
+export interface HeroSectionSelect<T extends boolean = true> {
+  greeting?: T;
+  headline?: T;
+  subheadline?: T;
+  roles?:
+    | T
+    | {
+        role?: T;
+        id?: T;
+      };
+  ctaPrimary?:
+    | T
+    | {
+        label?: T;
+        href?: T;
+      };
+  ctaSecondary?:
+    | T
+    | {
+        label?: T;
+        href?: T;
+      };
+  updatedAt?: T;
+  createdAt?: T;
+  globalType?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "collections_widget".
+ */
+export interface CollectionsWidget {
+  data?: {
+    [k: string]: unknown;
+  };
+  width: 'full';
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema

@@ -1,67 +1,150 @@
-# Payload Blank Template
+<div align="center">
 
-This template comes configured with the bare minimum to get started on anything you need.
+# 🚀 Portfolio CMS
 
-## Quick start
+**Open-source, self-hosted portfolio for developers & designers**  
+Built with **Next.js 14** · **Payload CMS 3** · **MongoDB** · **shadcn/ui**
 
-This template can be deployed directly from our Cloud hosting and it will setup MongoDB and cloud S3 object storage for media.
+[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https://github.com/YOUR_USERNAME/portfolio-cms&env=MONGODB_URI,PAYLOAD_SECRET,NEXTAUTH_SECRET,NEXTAUTH_URL,NEXT_PUBLIC_SITE_URL&envDescription=Required%20environment%20variables&envLink=https://github.com/YOUR_USERNAME/portfolio-cms%23environment-variables&project-name=portfolio-cms&repository-name=portfolio-cms)
 
-## Quick Start - local setup
+![Next.js](https://img.shields.io/badge/Next.js-14-black?logo=next.js)
+![Payload CMS](https://img.shields.io/badge/Payload_CMS-3.0-blue)
+![TypeScript](https://img.shields.io/badge/TypeScript-5.0-blue?logo=typescript)
+![MongoDB](https://img.shields.io/badge/MongoDB-Atlas-green?logo=mongodb)
+![License](https://img.shields.io/badge/license-MIT-green)
 
-To spin up this template locally, follow these steps:
+</div>
 
-### Clone
+---
 
-After you click the `Deploy` button above, you'll want to have standalone copy of this repo on your machine. If you've already cloned this repo, skip to [Development](#development).
+## ✨ Features
 
-### Development
+- 🎨 **Beautiful UI** — Dark/light mode, fully responsive, shadcn/ui components
+- 📁 **Projects** — Showcase with tech stack, live demo & GitHub links, featured flag
+- ✍️ **Blog** — Rich text editor, tags, SEO meta, draft/publish workflow
+- 💬 **Testimonials** — Star ratings, featured testimonials on homepage
+- 💼 **Work Experience** — Timeline with highlights and technologies
+- 🛠 **Skills** — Categorized tech stack with proficiency levels
+- 📬 **Contact Form** — Zod validation + Resend email integration
+- 🔐 **Auth** — NextAuth v5 + Payload CMS authentication
+- 🔄 **Draft/Publish** — Content versioning built in
+- 🚀 **One-click Deploy** — Deploy to Vercel in minutes
 
-1. First [clone the repo](#clone) if you have not done so already
-2. `cd my-project && cp .env.example .env` to copy the example environment variables. You'll need to add the `MONGODB_URL` from your Cloud project to your `.env` if you want to use S3 storage and the MongoDB database that was created for you.
+## 🗂 Project Structure
 
-3. `pnpm install && pnpm dev` to install dependencies and start the dev server
-4. open `http://localhost:3000` to open the app in your browser
+```
+portfolio-cms/
+├── payload/
+│   ├── collections/        # Payload CMS collections
+│   │   ├── Users.ts
+│   │   ├── Projects.ts
+│   │   ├── BlogPosts.ts
+│   │   ├── Testimonials.ts
+│   │   ├── WorkExperience.ts
+│   │   ├── Skills.ts
+│   │   └── Media.ts
+│   └── globals/            # Site-wide settings
+│       ├── SiteSettings.ts
+│       └── HeroSection.ts
+├── src/
+│   ├── app/
+│   │   ├── (frontend)/     # Public portfolio pages
+│   │   ├── (payload)/      # Payload admin panel
+│   │   └── api/            # API routes (contact, auth)
+│   ├── components/
+│   │   ├── layout/         # Navbar, Footer, ThemeProvider
+│   │   ├── sections/       # Homepage sections
+│   │   ├── portfolio/      # ProjectCard, BlogCard
+│   │   └── ui/             # shadcn/ui components
+│   └── lib/
+│       ├── payload.ts      # Payload helpers
+│       ├── auth.ts         # NextAuth config
+│       └── utils.ts        # Utilities
+├── payload.config.ts
+└── next.config.mjs
+```
 
-That's it! Changes made in `./src` will be reflected in your app. Follow the on-screen instructions to login and create your first admin user. Then check out [Production](#production) once you're ready to build and serve your app, and [Deployment](#deployment) when you're ready to go live.
+## 🚀 Quick Start
 
-#### Docker (Optional)
+### 1. Clone the repo
 
-If you prefer to use Docker for local development instead of a local MongoDB instance, the provided docker-compose.yml file can be used.
+```bash
+git clone https://github.com/YOUR_USERNAME/portfolio-cms.git
+cd portfolio-cms
+npm install
+```
 
-To do so, follow these steps:
+### 2. Set up environment variables
 
-- Modify the `MONGODB_URL` in your `.env` file to `mongodb://127.0.0.1/<dbname>`
-- Modify the `docker-compose.yml` file's `MONGODB_URL` to match the above `<dbname>`
-- Run `docker-compose up` to start the database, optionally pass `-d` to run in the background.
+```bash
+cp .env.example .env.local
+```
 
-## How it works
+Fill in your `.env.local`:
 
-The Payload config is tailored specifically to the needs of most websites. It is pre-configured in the following ways:
+| Variable | Description |
+|---|---|
+| `MONGODB_URI` | MongoDB Atlas connection string |
+| `PAYLOAD_SECRET` | Random secret (`openssl rand -base64 32`) |
+| `NEXTAUTH_SECRET` | Random secret (`openssl rand -base64 32`) |
+| `NEXTAUTH_URL` | Your site URL |
+| `NEXT_PUBLIC_SITE_URL` | Your site URL |
+| `RESEND_API_KEY` | (Optional) Resend API key for emails |
+| `CONTACT_EMAIL` | (Optional) Email to receive contact form submissions |
 
-### Collections
+### 3. Run development server
 
-See the [Collections](https://payloadcms.com/docs/configuration/collections) docs for details on how to extend this functionality.
+```bash
+npm run dev
+```
 
-- #### Users (Authentication)
+Open [http://localhost:3000](http://localhost:3000) — your portfolio frontend.  
+Admin panel: [http://localhost:3000/admin](http://localhost:3000/admin)
 
-  Users are auth-enabled collections that have access to the admin panel.
+### 4. Create your first admin user
 
-  For additional help, see the official [Auth Example](https://github.com/payloadcms/payload/tree/main/examples/auth) or the [Authentication](https://payloadcms.com/docs/authentication/overview#authentication-overview) docs.
+Visit `/admin` and create your admin account on first run.
 
-- #### Media
+Then go to **Site Settings** and **Hero Section** globals to fill in your info!
 
-  This is the uploads enabled collection. It features pre-configured sizes, focal point and manual resizing to help you manage your pictures.
+---
 
-### Docker
+## 🌐 Deploy to Vercel
 
-Alternatively, you can use [Docker](https://www.docker.com) to spin up this template locally. To do so, follow these steps:
+1. Click the **Deploy with Vercel** button above
+2. Connect your GitHub repo
+3. Add environment variables in Vercel dashboard
+4. Deploy!
 
-1. Follow [steps 1 and 2 from above](#development), the docker-compose file will automatically use the `.env` file in your project root
-1. Next run `docker-compose up`
-1. Follow [steps 4 and 5 from above](#development) to login and create your first admin user
+**MongoDB Atlas (Free Tier):**
+1. Go to [cloud.mongodb.com](https://cloud.mongodb.com)
+2. Create a free M0 cluster
+3. Get your connection string
+4. Add to `MONGODB_URI` in Vercel env vars
 
-That's it! The Docker instance will help you get up and running quickly while also standardizing the development environment across your teams.
+---
 
-## Questions
+## 📦 Tech Stack
 
-If you have any issues or questions, reach out to us on [Discord](https://discord.com/invite/payload) or start a [GitHub discussion](https://github.com/payloadcms/payload/discussions).
+| Technology | Purpose |
+|---|---|
+| [Next.js 14](https://nextjs.org) | React framework with App Router |
+| [Payload CMS 3](https://payloadcms.com) | Headless CMS & admin panel |
+| [MongoDB Atlas](https://www.mongodb.com/atlas) | Database (free tier available) |
+| [NextAuth v5](https://authjs.dev) | Authentication |
+| [shadcn/ui](https://ui.shadcn.com) | UI component library |
+| [Tailwind CSS](https://tailwindcss.com) | Styling |
+| [Framer Motion](https://www.framer.com/motion/) | Animations |
+| [Resend](https://resend.com) | Email for contact form |
+| [Zod](https://zod.dev) | Form validation |
+
+---
+
+## 🤝 Contributing
+
+Contributions, issues and feature requests are welcome!  
+Give a ⭐️ if this project helped you!
+
+## 📝 License
+
+MIT © [Your Name](https://github.com/YOUR_USERNAME)
