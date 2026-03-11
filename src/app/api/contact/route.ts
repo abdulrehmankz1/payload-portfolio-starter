@@ -34,8 +34,13 @@ export async function POST(req: Request) {
     return NextResponse.json({ success: true })
   } catch (error) {
     if (error instanceof z.ZodError) {
-      return NextResponse.json({ error: 'Invalid data', details: error.errors }, { status: 400 })
+      // .errors ki jagah .issues use karein ya .flatten() detail ke liye
+      return NextResponse.json(
+        { error: 'Invalid data', details: error.flatten().fieldErrors }, 
+        { status: 400 }
+      )
     }
+    
     console.error('Contact form error:', error)
     return NextResponse.json({ error: 'Internal server error' }, { status: 500 })
   }
